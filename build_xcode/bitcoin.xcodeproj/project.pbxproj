@@ -14,8 +14,10 @@
 				8F289FB02AAB4BEF822464B2 /* CMake Rules */,
 			);
 			dependencies = (
-				C7139B79049347978C546F99 /* PBXTargetDependency */,
 				6942366F7888442583488EFB /* PBXTargetDependency */,
+				5F4CF53D1FEC311E007A8482 /* PBXTargetDependency */,
+				5F4CF53B1FEC311C007A8482 /* PBXTargetDependency */,
+				C7139B79049347978C546F99 /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
 			productName = ALL_BUILD;
@@ -505,6 +507,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		5F4CF53A1FEC311C007A8482 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 389C428C421F4D08AE9D06BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FEB885A1FEBAB20007A8482;
+			remoteInfo = "bitcoin-tx";
+		};
+		5F4CF53C1FEC311E007A8482 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 389C428C421F4D08AE9D06BA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FEB89271FEBAB37007A8482;
+			remoteInfo = "bitcoin-cli";
+		};
 		5FEB885C1FEBAB20007A8482 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 389C428C421F4D08AE9D06BA /* Project object */;
@@ -1100,7 +1116,7 @@
 		D917678CE81C46A3B600302C /* arith_uint256.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = arith_uint256.h; path = src/arith_uint256.h; sourceTree = SOURCE_ROOT; };
 		D92F575A0B9C4A49902A00C2 /* register.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = register.h; path = src/rpc/register.h; sourceTree = SOURCE_ROOT; };
 		D9403B7A65E14815BE88A6C9 /* qvaluecombobox.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = qvaluecombobox.h; path = src/qt/qvaluecombobox.h; sourceTree = SOURCE_ROOT; };
-		D9C66BC36DDC4AECB4FEE6FD /* bitcoin */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = bitcoin; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9C66BC36DDC4AECB4FEE6FD /* bitcoind */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = bitcoind; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9CE4A12C1CF4BF891BBB7EE /* consensus.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = consensus.h; path = src/consensus/consensus.h; sourceTree = SOURCE_ROOT; };
 		DA6CFE03DCEB4EE38CFCB236 /* testharness.cc */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = testharness.cc; path = src/leveldb/util/testharness.cc; sourceTree = SOURCE_ROOT; };
 		DA9ABC49C08A4C9586A035C3 /* c_test.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = c_test.c; path = src/leveldb/db/c_test.c; sourceTree = SOURCE_ROOT; };
@@ -1968,7 +1984,7 @@
 		DE7CF0ED05D241F4877FB253 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D9C66BC36DDC4AECB4FEE6FD /* bitcoin */,
+				D9C66BC36DDC4AECB4FEE6FD /* bitcoind */,
 				5FEB89261FEBAB20007A8482 /* bitcoin-tx */,
 				5FEB89F31FEBAB37007A8482 /* bitcoin-cli */,
 			);
@@ -2032,7 +2048,7 @@
 			);
 			name = bitcoind;
 			productName = bitcoin;
-			productReference = D9C66BC36DDC4AECB4FEE6FD /* bitcoin */;
+			productReference = D9C66BC36DDC4AECB4FEE6FD /* bitcoind */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -2593,6 +2609,16 @@
 			target = 9445C94E67DE448E87825F7B /* ZERO_CHECK */;
 			targetProxy = E7D1C8CB4E824CFAB4A827D2 /* PBXContainerItemProxy */;
 		};
+		5F4CF53B1FEC311C007A8482 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5FEB885A1FEBAB20007A8482 /* bitcoin-tx */;
+			targetProxy = 5F4CF53A1FEC311C007A8482 /* PBXContainerItemProxy */;
+		};
+		5F4CF53D1FEC311E007A8482 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5FEB89271FEBAB37007A8482 /* bitcoin-cli */;
+			targetProxy = 5F4CF53C1FEC311E007A8482 /* PBXContainerItemProxy */;
+		};
 		5FEB885B1FEBAB20007A8482 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9445C94E67DE448E87825F7B /* ZERO_CHECK */;
@@ -2668,7 +2694,7 @@
 					"$(OTHER_LDFLAGS)",
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = bitcoin;
+				PRODUCT_NAME = bitcoind;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
 				USE_HEADERMAP = NO;
@@ -3278,7 +3304,7 @@
 					"$(OTHER_LDFLAGS)",
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = bitcoin;
+				PRODUCT_NAME = bitcoind;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
 				USE_HEADERMAP = NO;
@@ -3422,7 +3448,7 @@
 					"$(OTHER_LDFLAGS)",
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = bitcoin;
+				PRODUCT_NAME = bitcoind;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
 				USE_HEADERMAP = NO;
@@ -3462,7 +3488,7 @@
 					"$(OTHER_LDFLAGS)",
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = bitcoin;
+				PRODUCT_NAME = bitcoind;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
 				USE_HEADERMAP = NO;
