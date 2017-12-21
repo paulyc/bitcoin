@@ -1,0 +1,3 @@
+/Users/paulyc/Development/bitcoin/xcode2/CMakeFiles/bitcoin.dir
+/Users/paulyc/Development/bitcoin/xcode2/CMakeFiles/ALL_BUILD.dir
+/Users/paulyc/Development/bitcoin/xcode2/CMakeFiles/ZERO_CHECK.dir
