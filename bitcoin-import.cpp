@@ -11,11 +11,30 @@
 #include "txdb.h"
 #include "chainparamsbase.h"
 #include "chainparams.h"
+#include "consensus/validation.h"
 #include "validation.h"
 #include "validationinterface.h"
+//#include "validationstate.h"
 #include "coins.h"
+#include "script/sigcache.h"
 #include <boost/chrono.hpp>
+#include <boost/thread.hpp>
+#include <boost/asio.hpp>
 
+#include <signal.h>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+
+std::atomic_bool running;
+std::mutex m;
+std::condition_variable interrupt;
+
+void sigintHandler(int) {
+    std::unique_lock<std::mutex> l(m);
+    running = false;
+    interrupt.notify_all();
+}
 
 /**
  * This is a minimally invasive approach to shutdown on LevelDB read errors from the
@@ -58,6 +77,7 @@ protected:
      */
     virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) override {
         LogPrintf("MyValidationInterface::UpdatedBlockTip(%p,%p,%b)\n", pindexNew, pindexFork, fInitialDownload);
+    
     }
     /**
      * Notifies listeners of a transaction having been added to mempool.
@@ -88,6 +108,7 @@ protected:
      */
     virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted) override {
         LogPrintf("MyValidationInterface::BlockConnected(%s,%s,%d)\n", block->ToString(), pindex->GetBlockHash().GetHex(), txnConflicted.size());
+        //block->Get
     }
     /**
      * Notifies listeners of a block being disconnected
@@ -124,7 +145,7 @@ protected:
      * callback was generated (not necessarily now)
      */
     virtual void BlockChecked(const CBlock& blk, const CValidationState& state) override {
-        LogPrintf("MyValidationInterface::BlockChecked(%s, %%s)\n", blk.ToString());
+        LogPrintf("MyValidationInterface::BlockChecked(%s, %s)\n", blk.ToString(), state.GetDebugMessage());
     }
     /**
      * Notifies listeners that a block which builds directly on our current tip
@@ -136,6 +157,12 @@ protected:
 
 int main(int argc, char **argv) {
     fPrintToConsole = true;
+    {
+        signal(SIGINT, sigintHandler);
+        std::lock_guard<std::mutex> g(m);
+        running = true;
+    }
+    
     boost::thread_group threadGroup;
     CScheduler scheduler;
     
@@ -171,32 +198,89 @@ int main(int argc, char **argv) {
     
     //Params().Set
     
-    LoadGenesisBlock(Params());
-    LoadExternalBlockFile(Params(), fopen("/Users/paulyc/.bitcoin/blocks/blk00000.dat", "rb"));
+    //LoadGenesisBlock(Params());
+    //LoadBlockIndex(Params());
+    //LoadExternalBlockFile(Params(), fopen("/Users/paulyc/.bitcoin/blocks/blk00000.dat", "rb"));
     //LoadExternalBlockFile(Params(), fopen("/Users/paulyc/.bitcoin/blocks/blk00001.dat", "rb"));
     //LoadExternalBlockFile(Params(), fopen("/Users/paulyc/.bitcoin/blocks/blk00002.dat", "rb"));
     
+    InitScriptExecutionCache();
+    InitSignatureCache();
     
     
-    boost::system_time xt;
+
+    {
+        //std::mutex local;
+        //std::condition_variable op_wait;
+        std::vector<fs::path> vImportFiles = { "/Users/paulyc/.bitcoin/blocks/blk00000.dat" };
+        //std::unique_lock<std::mutex> lock(local);
+        //bool done = false;
+        CValidationState state;
+        
+        boost::thread *th = threadGroup.create_thread([&](){
+        //scheduler.schedule([&](){
+            //std::unique_lock<std::mutex> l(local);
+            //int nFile = 0;
+            //CDiskBlockPos pos(nFile, 0);
+            //if (!fs::exists(GetBlockPosFilename(pos, "blk")))
+            //    break; // No block files left to reindex
+            for (auto path : vImportFiles) {
+                FILE *f = fopen(path.c_str(), "rb");
+                //FILE *f = OpenBlockFile(pos, true);
+                LoadExternalBlockFile(Params(), f);//, &pos);
+                //++nFile;
+            }
+            ActivateBestChain(state, Params());
+            //done = true;
+            //op_wait.notify_all();
+        });
+
+        //while (!done) {
+        //    op_wait.wait(lock);
+        //}
+        th->join();
+        cout << "done w block load, moving on.." << endl;
+    }
+    /*
+    {
+        CValidationState state;
+        std::mutex local;
+        std::condition_variable op_wait;
+        std::unique_lock<std::mutex> lock(local);
+        bool done = false;
+        boost::thread *th = threadGroup.create_thread([&](){
+            std::unique_lock<std::mutex> l(local);
+            ActivateBestChain(state, Params());
+            done = true;
+            op_wait.notify_all();
+        });
+        while (!done) {
+            op_wait.wait(lock);
+        }
+        th->join();
+        cout << "done w activate, moving on.." << endl;
+    }*/
+    
+    /*boost::system_time xt;
     
     int tm = 0;
     while (tm < 30000) {
         boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
         tm += 100;
-    }
+    }*/
     
-    CBlockFileInfo info;
+    /*CBlockFileInfo info;
     cout << "here" << endl;
     pblocktree->ReadBlockFileInfo(0, info);
     cout << "there" << endl;
-    tm = 0;
+    /*tm = 0;
     while (tm < 0) {
         boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
         tm += 100;
-    }
-    cout << info.ToString() << endl;
+    }*/
+    /*cout << info.ToString() << endl;
     cout << "elsewhere" << endl;
+    /*
     CDBIterator *iter = pblocktree->NewIterator();
     iter->SeekToFirst();
     
@@ -207,8 +291,22 @@ int main(int argc, char **argv) {
         cout << "Key: " << key << " value: " << val.ToString() << endl;
     } while (iter->Next(), true);
     //iter->GetKey
+    */
+    /*cout << "Waiting for interrupt...\n" << endl;
+    while (true) {
+        std::unique_lock<std::mutex> l(m);
+        if (running) {
+            interrupt.wait(l);
+        } else {
+            break;
+        }
+    }*/
     
+    cout << "stopping" << endl;
+    scheduler.stop();
+    cout << "shutting down thread group" << endl;
     threadGroup.interrupt_all();
     threadGroup.join_all();
+    cout << "Joined" << endl;
     return 0;
 }
