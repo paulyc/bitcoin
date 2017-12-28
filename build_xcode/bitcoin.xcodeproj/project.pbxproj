@@ -252,6 +252,7 @@
 		5F3FA6101FEF755E007A8482 /* walletdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2EE08D3B6A754F5AA20C4C7D /* walletdb.cpp */; };
 		5F3FA6111FEF755E007A8482 /* warnings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BEE68C7EE4B444D3861E0311 /* warnings.cpp */; };
 		5F3FA61A1FEF75AC007A8482 /* bitcoin-import.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F3FA41D1FEF6CD4007A8482 /* bitcoin-import.cpp */; };
+		5FEA29AC1FF4A096007A8482 /* mysqlinterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FEA29AA1FF4A096007A8482 /* mysqlinterface.cpp */; };
 		5FEB885E1FEBAB20007A8482 /* addrdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04F2A950C37C4DC5AA38DA8E /* addrdb.cpp */; };
 		5FEB885F1FEBAB20007A8482 /* addrman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BE8A4FB0D59C4225A21DD5C9 /* addrman.cpp */; };
 		5FEB88601FEBAB20007A8482 /* arith_uint256.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B584F9A865C944DA9B1AC583 /* arith_uint256.cpp */; };
@@ -978,6 +979,12 @@
 		5F3FA6171FEF755E007A8482 /* bitcoin-import */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "bitcoin-import"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F8306E7282247F4B43ED1AD /* uritests.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = uritests.cpp; path = src/qt/test/uritests.cpp; sourceTree = SOURCE_ROOT; };
 		5F8905BDD54E4A829AA6D91B /* db.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = db.h; path = src/wallet/db.h; sourceTree = SOURCE_ROOT; };
+		5FEA29A61FF4A078007A8482 /* mysql_connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mysql_connection.h; path = src/mysql/mysql_connection.h; sourceTree = SOURCE_ROOT; };
+		5FEA29A71FF4A078007A8482 /* mysql_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mysql_error.h; path = src/mysql/mysql_error.h; sourceTree = SOURCE_ROOT; };
+		5FEA29A81FF4A078007A8482 /* cppconn */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cppconn; path = src/mysql/cppconn; sourceTree = SOURCE_ROOT; };
+		5FEA29A91FF4A079007A8482 /* mysql_driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mysql_driver.h; path = src/mysql/mysql_driver.h; sourceTree = SOURCE_ROOT; };
+		5FEA29AA1FF4A096007A8482 /* mysqlinterface.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mysqlinterface.cpp; sourceTree = "<group>"; };
+		5FEA29AB1FF4A096007A8482 /* mysqlinterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mysqlinterface.hpp; sourceTree = "<group>"; };
 		5FEB89261FEBAB20007A8482 /* bitcoin-tx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "bitcoin-tx"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEB89F31FEBAB37007A8482 /* bitcoin-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "bitcoin-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FEB89F41FEBB272007A8482 /* walletutil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = walletutil.cpp; path = src/wallet/walletutil.cpp; sourceTree = "<group>"; };
@@ -1576,6 +1583,8 @@
 				3D88476DB93D4E6B8F72F6A4 /* zmqpublishnotifier.cpp */,
 				5F3FA41D1FEF6CD4007A8482 /* bitcoin-import.cpp */,
 				5F3FA41E1FEF6CD5007A8482 /* bitcoin-import.hpp */,
+				5FEA29AA1FF4A096007A8482 /* mysqlinterface.cpp */,
+				5FEA29AB1FF4A096007A8482 /* mysqlinterface.hpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -1647,6 +1656,17 @@
 			);
 			name = "bitcoin-import";
 			path = "build_xcode/bitcoin-import";
+			sourceTree = "<group>";
+		};
+		5FEA29A51FF4A04B007A8482 /* mysql */ = {
+			isa = PBXGroup;
+			children = (
+				5FEA29A81FF4A078007A8482 /* cppconn */,
+				5FEA29A61FF4A078007A8482 /* mysql_connection.h */,
+				5FEA29A91FF4A079007A8482 /* mysql_driver.h */,
+				5FEA29A71FF4A078007A8482 /* mysql_error.h */,
+			);
+			path = mysql;
 			sourceTree = "<group>";
 		};
 		5FEB88521FEBA13A007A8482 /* test */ = {
@@ -1828,6 +1848,7 @@
 		7CE04687B5304AB4A39A9D30 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
+				5FEA29A51FF4A04B007A8482 /* mysql */,
 				69F6091D62DD4FECA0DE9C44 /* addrdb.h */,
 				FFAD047CF0474789877CC7DA /* addressbookpage.h */,
 				0BAFC583B05D4ABEA1123F3B /* addresstablemodel.h */,
@@ -2360,6 +2381,7 @@
 				5F3FA59B1FEF755E007A8482 /* init.cpp in Sources */,
 				5F3FA59C1FEF755E007A8482 /* key.cpp in Sources */,
 				5F3FA59D1FEF755E007A8482 /* keystore.cpp in Sources */,
+				5FEA29AC1FF4A096007A8482 /* mysqlinterface.cpp in Sources */,
 				5F3FA59E1FEF755E007A8482 /* builder.cc in Sources */,
 				5F3FA59F1FEF755E007A8482 /* c.cc in Sources */,
 				5F3FA5A01FEF755E007A8482 /* db_impl.cc in Sources */,
