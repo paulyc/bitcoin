@@ -17,14 +17,17 @@
 //#include "validationstate.h"
 #include "coins.h"
 #include "script/sigcache.h"
+#include "mysqlinterface.hpp"
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
 #include <boost/asio.hpp>
+#include <boost/algorithm/hex.hpp>
 
 #include <signal.h>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <sstream>
 
 std::atomic_bool running;
 std::mutex m;
@@ -66,10 +69,248 @@ extern std::unique_ptr<CCoinsViewDB> pcoinsdbview;
 extern std::unique_ptr<CBlockTreeDB> pblocktree;
 extern bool fPrintToConsole;
 
+class BlockHeaderInsertStatement : public MySqlPreparedStatement {
+public:
+        BlockHeaderInsertStatement(std::unique_ptr<MySqlDbConnection> &conn) :
+            MySqlPreparedStatement(conn, "INSERT INTO BlockHeader(hash, version, hashPrevBlock, hashMerkleRoot, nonce, bits, time) VALUES(?, ?, ?, ?, ?, ?, ?)") {
+        }
+    
+        uint64_t execute(const std::shared_ptr<const CBlock> &block, MySqlDbConnection& conn) {
+            cout << "BlockHeaderInsertStatement::execute " << sql << endl;
+            stmt->setString(1, block->GetHash().GetHex());
+            stmt->setInt(2, block->nVersion);
+            stmt->setString(3, block->hashPrevBlock.GetHex());
+            stmt->setString(4, block->hashMerkleRoot.GetHex());
+            stmt->setInt(5, block->nNonce);
+            stmt->setInt(6, block->nBits);
+            stmt->setInt(7, block->nTime);
+           // sql::ResultSet *rs = stmt->executeQuery();
+           stmt->execute();
+            //cout << rs << endl;
+            //rs->insert_id;
+            //sql::mysql::MySQL_Prepared_ResultSet* myrs = (sql::mysql::MySQL_Prepared_ResultSet*)rs;
+            //uint64_t insId = myrs->proxy->px->stmt->insert_id;
+            //cout << rs->getInt64(1) << endl;
+            return conn.getLastInsertId();
+        }
+};
+
+class BlockDAO {
+public:
+    BlockDAO(std::unique_ptr<MySqlDbConnection> &conn) : hdrInsert(std::unique_ptr<BlockHeaderInsertStatement>(new BlockHeaderInsertStatement(conn))) {
+    
+    }
+    uint64_t insertBlock(const std::shared_ptr<const CBlock> &block, MySqlDbConnection& conn) {
+        return hdrInsert->execute(block, conn);
+    }
+private:
+    std::unique_ptr<BlockHeaderInsertStatement> hdrInsert;
+};
+
+class TransactionInsertStatement : public MySqlPreparedStatement {
+public:
+        TransactionInsertStatement(std::unique_ptr<MySqlDbConnection> &conn) :
+            MySqlPreparedStatement(conn, "INSERT INTO Transaction(blockId, txid, wtxid, locktime) VALUES(?, ?, ?, ?)") {
+        }
+    
+        uint64_t execute(uint64_t blkId, const std::shared_ptr<const CTransaction> &tx, MySqlDbConnection& conn) {
+            cout << "TransactionInsertStatement::execute " << sql << endl;
+            stmt->setUInt64(1, blkId);
+            stmt->setString(2, tx->GetHash().GetHex());
+            stmt->setString(3, tx->GetWitnessHash().GetHex());
+            stmt->setInt(4, tx->nLockTime);
+            stmt->execute();
+            return conn.getLastInsertId();
+        }
+};
+
+void toHex(std::stringstream &out, std::vector<unsigned char> &in) {
+    for (auto i = in.begin(); i != in.end(); i++) {
+        switch(*i & 0xf0) {
+            case 0:
+                out << '0';
+                break;
+            case 1:
+                out << '1';
+                break;
+            case 2:
+                out << '2';
+                break;
+            case 3:
+                out << '3';
+                break;
+            case 4:
+                out << '4';
+                break;
+            case 5:
+                out << '5';
+                break;
+            case 6:
+                out << '6';
+                break;
+            case 7:
+                out << '7';
+                break;
+            case 8:
+                out << '8';
+                break;
+            case 9:
+                out << '9';
+                break;
+            case 0xa:
+                out << 'a';
+                break;
+            case 0xb:
+                out << 'b';
+                break;
+            case 0xc:
+                out << 'c';
+                break;
+            case 0xd:
+                out << 'd';
+                break;
+            case 0xe:
+                out << 'e';
+                break;
+            case 0xf:
+                out << 'f';
+                break;
+        }
+        switch(*i & 0x0f) {
+            case 0:
+                out << '0';
+                break;
+            case 1:
+                out << '1';
+                break;
+            case 2:
+                out << '2';
+                break;
+            case 3:
+                out << '3';
+                break;
+            case 4:
+                out << '4';
+                break;
+            case 5:
+                out << '5';
+                break;
+            case 6:
+                out << '6';
+                break;
+            case 7:
+                out << '7';
+                break;
+            case 8:
+                out << '8';
+                break;
+            case 9:
+                out << '9';
+                break;
+            case 0xa:
+                out << 'a';
+                break;
+            case 0xb:
+                out << 'b';
+                break;
+            case 0xc:
+                out << 'c';
+                break;
+            case 0xd:
+                out << 'd';
+                break;
+            case 0xe:
+                out << 'e';
+                break;
+            case 0xf:
+                out << 'f';
+                break;
+        }
+    }
+}
+
+class TxInputInsertStatement : public MySqlPreparedStatement {
+public:
+    TxInputInsertStatement(std::unique_ptr<MySqlDbConnection> &conn) :
+        MySqlPreparedStatement(conn, "INSERT INTO TxInput(txId, nSequence, prevoutHash, prevoutN, scriptSig, scriptWitness) VALUES(?, ?, ?, ?, ?, ?)")
+    {}
+    
+    uint64_t execute(uint64_t txId, const CTxIn &txIn, MySqlDbConnection& conn) {
+        std::vector<unsigned char> scriptSigSerialized = ToByteVector(txIn.scriptSig);
+        //std::vector<unsigned char> scriptWitnessSerialized = ToByteVector(txIn.scriptWitness.);
+        std::stringstream scriptSigAsHex;
+        toHex(scriptSigAsHex, scriptSigSerialized);
+        std::string scriptWitnessAsHex = "";
+        cout << "TxInputInsertStatement::execute " << sql << ' ' << scriptSigAsHex.str() << endl;
+        stmt->setUInt64(1, txId);
+        stmt->setInt(2, txIn.nSequence);
+        stmt->setString(3, txIn.prevout.hash.GetHex());
+        stmt->setInt(4, txIn.prevout.n);
+        stmt->setString(5, scriptSigAsHex.str());
+        stmt->setString(6, scriptWitnessAsHex);
+        stmt->execute();
+        return conn.getLastInsertId();
+    }
+};
+
+class TxOutputInsertStatement : public MySqlPreparedStatement {
+public:
+    TxOutputInsertStatement(std::unique_ptr<MySqlDbConnection> &conn) :
+        MySqlPreparedStatement(conn, "INSERT INTO TxOutput(txId, indexN, value, scriptPubKey) VALUES(?, ?, ?, ?)")
+        {}
+    
+    uint64_t execute(uint64_t txId, int n, const CTxOut &txOut, MySqlDbConnection& conn) {
+        std::vector<unsigned char> scriptPubKeySerialized = ToByteVector(txOut.scriptPubKey);
+        std::stringstream scriptPubKeyHex;
+        toHex(scriptPubKeyHex, scriptPubKeySerialized);
+        cout << "TxOutputInsertStatement::execute " << sql << ' ' << scriptPubKeyHex.str() << endl;
+            //txOut.scriptPubKey.
+        stmt->setUInt64(1, txId);
+        stmt->setInt(2, n);
+        stmt->setUInt64(3, txOut.nValue);
+        stmt->setString(4, scriptPubKeyHex.str());
+        stmt->execute();
+        return conn.getLastInsertId();
+    }
+};
+
+class TxDAO {
+public:
+    TxDAO(std::unique_ptr<MySqlDbConnection> &conn) :
+        txInsert(std::unique_ptr<TransactionInsertStatement>(new TransactionInsertStatement(conn))),
+        txInInsert(std::unique_ptr<TxInputInsertStatement>(new TxInputInsertStatement(conn))),
+        txOutInsert(std::unique_ptr<TxOutputInsertStatement>(new TxOutputInsertStatement(conn)))
+    {}
+    uint64_t insertTransaction(uint64_t blkId, const std::shared_ptr<const CTransaction> &tx, MySqlDbConnection& conn) {
+        uint64_t txId = txInsert->execute(blkId, tx, conn);
+        for (auto txIn : tx->vin) {
+            txInInsert->execute(txId, txIn, conn);
+        }
+        //for (auto txOut : tx->vout) {
+        for (int i = 0; i < tx->vout.size(); ++i) {
+            txOutInsert->execute(txId, i, tx->vout[i], conn);
+        }
+        return txId;
+    }
+    private:
+    std::unique_ptr<TransactionInsertStatement> txInsert;
+    std::unique_ptr<TxInputInsertStatement> txInInsert;
+    std::unique_ptr<TxOutputInsertStatement> txOutInsert;
+};
+
 class MyValidationInterface : public CValidationInterface {
 public:
-    MyValidationInterface() {}
+    MyValidationInterface() {
+        drv = std::unique_ptr<MySqlDbDriver>(new MySqlDbDriver());
+        conn = drv->getConnection();
+        blockDao = std::unique_ptr<BlockDAO>(new BlockDAO(conn));
+        txDao = std::unique_ptr<TxDAO>(new TxDAO(conn));
+    }
 protected:
+    std::unique_ptr<BlockDAO> blockDao;
+    std::unique_ptr<TxDAO> txDao;
+    std::unique_ptr<MySqlDbConnection> conn;
+    std::unique_ptr<MySqlDbDriver> drv;
     /**
      * Notifies listeners of updated block chain tip
      *
@@ -106,9 +347,17 @@ protected:
      *
      * Called on a background thread.
      */
+     //std::stringstream dontdothis;
+     //std::
+    
     virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted) override {
         LogPrintf("MyValidationInterface::BlockConnected(%s,%s,%d)\n", block->ToString(), pindex->GetBlockHash().GetHex(), txnConflicted.size());
-        //block->Get
+        conn->tryTransaction([block,this](MySqlDbConnection& conn) {
+            uint64_t blkId = blockDao->insertBlock(block, conn);
+            for (auto tx : block->vtx) {
+                txDao->insertTransaction(blkId, tx, conn);
+            }
+        });
     }
     /**
      * Notifies listeners of a block being disconnected
@@ -207,7 +456,7 @@ int main(int argc, char **argv) {
     InitScriptExecutionCache();
     InitSignatureCache();
     
-    
+    std::unique_ptr<MySqlDbDriver> dbDrv = std::unique_ptr<MySqlDbDriver>(new MySqlDbDriver);
 
     {
         //std::mutex local;
@@ -216,6 +465,9 @@ int main(int argc, char **argv) {
         //std::unique_lock<std::mutex> lock(local);
         //bool done = false;
         CValidationState state;
+        
+        
+        //boost::thread *dbThread = threadGroup.create_thread(MySqlDbDriver::threadfun);
         
         boost::thread *th = threadGroup.create_thread([&](){
         //scheduler.schedule([&](){

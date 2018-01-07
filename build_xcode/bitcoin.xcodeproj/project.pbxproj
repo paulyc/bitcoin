@@ -979,10 +979,7 @@
 		5F3FA6171FEF755E007A8482 /* bitcoin-import */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "bitcoin-import"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F8306E7282247F4B43ED1AD /* uritests.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = uritests.cpp; path = src/qt/test/uritests.cpp; sourceTree = SOURCE_ROOT; };
 		5F8905BDD54E4A829AA6D91B /* db.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = db.h; path = src/wallet/db.h; sourceTree = SOURCE_ROOT; };
-		5FEA29A61FF4A078007A8482 /* mysql_connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mysql_connection.h; path = src/mysql/mysql_connection.h; sourceTree = SOURCE_ROOT; };
-		5FEA29A71FF4A078007A8482 /* mysql_error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mysql_error.h; path = src/mysql/mysql_error.h; sourceTree = SOURCE_ROOT; };
-		5FEA29A81FF4A078007A8482 /* cppconn */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cppconn; path = src/mysql/cppconn; sourceTree = SOURCE_ROOT; };
-		5FEA29A91FF4A079007A8482 /* mysql_driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mysql_driver.h; path = src/mysql/mysql_driver.h; sourceTree = SOURCE_ROOT; };
+		5FA4AFE9200051CE007A8482 /* mysql */ = {isa = PBXFileReference; lastKnownFileType = folder; name = mysql; path = src/mysql; sourceTree = "<group>"; };
 		5FEA29AA1FF4A096007A8482 /* mysqlinterface.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mysqlinterface.cpp; sourceTree = "<group>"; };
 		5FEA29AB1FF4A096007A8482 /* mysqlinterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mysqlinterface.hpp; sourceTree = "<group>"; };
 		5FEB89261FEBAB20007A8482 /* bitcoin-tx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "bitcoin-tx"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1658,17 +1655,6 @@
 			path = "build_xcode/bitcoin-import";
 			sourceTree = "<group>";
 		};
-		5FEA29A51FF4A04B007A8482 /* mysql */ = {
-			isa = PBXGroup;
-			children = (
-				5FEA29A81FF4A078007A8482 /* cppconn */,
-				5FEA29A61FF4A078007A8482 /* mysql_connection.h */,
-				5FEA29A91FF4A079007A8482 /* mysql_driver.h */,
-				5FEA29A71FF4A078007A8482 /* mysql_error.h */,
-			);
-			path = mysql;
-			sourceTree = "<group>";
-		};
 		5FEB88521FEBA13A007A8482 /* test */ = {
 			isa = PBXGroup;
 			children = (
@@ -1848,7 +1834,7 @@
 		7CE04687B5304AB4A39A9D30 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				5FEA29A51FF4A04B007A8482 /* mysql */,
+				5FA4AFE9200051CE007A8482 /* mysql */,
 				69F6091D62DD4FECA0DE9C44 /* addrdb.h */,
 				FFAD047CF0474789877CC7DA /* addressbookpage.h */,
 				0BAFC583B05D4ABEA1123F3B /* addresstablemodel.h */,
@@ -3070,6 +3056,8 @@
 		0C63068B565B4F9EBBD1AF39 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3116,6 +3104,7 @@
 					/usr/local/Cellar/openssl/1.0.2m/lib,
 					/usr/lib,
 					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -3154,6 +3143,7 @@
 					"-lboost_timer-mt",
 					"-lboost_timer",
 					"-lgmp",
+					"-lmysqlcppconn-static",
 				);
 				SDKROOT = macosx10.13;
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode/build;
@@ -3220,6 +3210,7 @@
 					/usr/local/Cellar/openssl/1.0.2m/lib,
 					/usr/lib,
 					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -3258,6 +3249,7 @@
 					"-lboost_timer-mt",
 					"-lboost_timer",
 					"-lgmp",
+					"-lmysqlcppconn-static",
 				);
 				SDKROOT = macosx10.13;
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode/build;
@@ -3268,6 +3260,8 @@
 		5F3FA6131FEF755E007A8482 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3295,6 +3289,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -3308,6 +3303,8 @@
 		5F3FA6141FEF755E007A8482 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3335,6 +3332,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -3348,6 +3346,8 @@
 		5F3FA6151FEF755E007A8482 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3375,6 +3375,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -3388,6 +3389,8 @@
 		5F3FA6161FEF755E007A8482 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3415,6 +3418,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -3428,6 +3432,8 @@
 		5FEB89221FEBAB20007A8482 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3468,6 +3474,8 @@
 		5FEB89231FEBAB20007A8482 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3508,6 +3516,8 @@
 		5FEB89241FEBAB20007A8482 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3548,6 +3558,8 @@
 		5FEB89251FEBAB20007A8482 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3588,6 +3600,8 @@
 		5FEB89EF1FEBAB37007A8482 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3625,6 +3639,8 @@
 		5FEB89F01FEBAB37007A8482 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3662,6 +3678,8 @@
 		5FEB89F11FEBAB37007A8482 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3699,6 +3717,8 @@
 		5FEB89F21FEBAB37007A8482 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3736,6 +3756,8 @@
 		8286E15E1D52443183DD5A47 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -3743,11 +3765,20 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					/Users/paulyc/Development/bitcoin/db4/lib,
+					/usr/local/lib,
+					/usr/local/Cellar/openssl/1.0.2m/lib,
+					/usr/lib,
+					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
+				);
 				OTHER_LDFLAGS = "$(OTHER_LDFLAGS)";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = ALL_BUILD;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -3767,6 +3798,7 @@
 					/usr/local/Cellar/openssl/1.0.2m/lib,
 					/usr/lib,
 					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -3805,6 +3837,7 @@
 					"-lboost_timer-mt",
 					"-lboost_timer",
 					"-lgmp",
+					"-lmysqlcppconn-static",
 				);
 				SDKROOT = macosx10.13;
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode/build;
@@ -3840,6 +3873,8 @@
 		9EB8EC8475A5420E9D110AFA /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -3886,6 +3921,7 @@
 					/usr/local/Cellar/openssl/1.0.2m/lib,
 					/usr/lib,
 					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
@@ -3924,6 +3960,7 @@
 					"-lboost_timer-mt",
 					"-lboost_timer",
 					"-lgmp",
+					"-lmysqlcppconn-static",
 				);
 				SDKROOT = macosx10.13;
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode/build;
@@ -3934,6 +3971,8 @@
 		CA4BCD3C812846AE9464885D /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -3941,11 +3980,20 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					/Users/paulyc/Development/bitcoin/db4/lib,
+					/usr/local/lib,
+					/usr/local/Cellar/openssl/1.0.2m/lib,
+					/usr/lib,
+					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
+				);
 				OTHER_LDFLAGS = "$(OTHER_LDFLAGS)";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = ALL_BUILD;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -3959,6 +4007,8 @@
 		D03B1C9D9DDD45F6AB51925A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -3966,11 +4016,20 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					/Users/paulyc/Development/bitcoin/db4/lib,
+					/usr/local/lib,
+					/usr/local/Cellar/openssl/1.0.2m/lib,
+					/usr/lib,
+					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
+				);
 				OTHER_LDFLAGS = "$(OTHER_LDFLAGS)";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = ALL_BUILD;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -3984,6 +4043,8 @@
 		E0C20BADD953481BBDB05FEF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -4024,6 +4085,8 @@
 		E2CB46889F8A4FED88C26856 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
@@ -4064,6 +4127,8 @@
 		EFEAA75E978545E08ADEAD02 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
@@ -4071,11 +4136,20 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = (
+					/Users/paulyc/Development/bitcoin/db4/lib,
+					/usr/local/lib,
+					/usr/local/Cellar/openssl/1.0.2m/lib,
+					/usr/lib,
+					/Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/.libs,
+					"/Users/paulyc/Development/mysql-connector-c++-1.1.9-macos10.12-x86-64bit/lib",
+				);
 				OTHER_LDFLAGS = "$(OTHER_LDFLAGS)";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = ALL_BUILD;
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/paulyc/Development/bitcoin/build_xcode;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/opt/berkeley-db@4/include /Users/paulyc/Development/boost /Users/paulyc/Development/bitcoin/src /Users/paulyc/Development/bitcoin/build_xcode/src /Users/paulyc/Development/bitcoin/db4/include /Users/paulyc/Development/bitcoin/src/univalue/include /Users/paulyc/Development/bitcoin/src/leveldb /Users/paulyc/Development/leveldb/helpers/memenv /Users/paulyc/Development/leveldb/include /Users/paulyc/Development/bitcoin/src/secp256k1/include /usr/local/include /usr/local/Cellar/openssl/1.0.2m/include /Users/paulyc/Development/kyotocabinet /Users/paulyc/Development/bitcoin/src/secp256k1 /Users/paulyc/Development/bitcoin/build_xcode/src/secp256k1/src /Users/paulyc/Development/bitcoin/src/secp256k1/src /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/include/darwin/ /Users/paulyc/Development/bitcoin/src/mysql";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",

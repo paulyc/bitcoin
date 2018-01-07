@@ -9,6 +9,7 @@
 #define bitcoin_import_hpp
 
 #include <iostream>
+#include <streambuf>
 using std::cout;
 using std::cerr;
 using std::endl;
