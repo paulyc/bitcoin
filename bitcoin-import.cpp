@@ -1,3 +1,8 @@
+// Copyright (c) 2009-2010 Satoshi Nakamoto
+// Copyright (c) 2009-2016 The Bitcoin Core developers
+// Copyright (c) 2018 Paul Ciarlo
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
 //
 //  bitcoin-import.cpp
 //  bitcoin
@@ -17,6 +22,7 @@
 //#include "validationstate.h"
 #include "coins.h"
 #include "script/sigcache.h"
+#include "base58.h"
 #include "mysqlinterface.hpp"
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
@@ -74,7 +80,7 @@ public:
         BlockHeaderInsertStatement(std::unique_ptr<MySqlDbConnection> &conn) :
             MySqlPreparedStatement(conn, "INSERT INTO BlockHeader(hash, version, hashPrevBlock, hashMerkleRoot, nonce, bits, time) VALUES(?, ?, ?, ?, ?, ?, ?)") {
         }
-    
+
         uint64_t execute(const std::shared_ptr<const CBlock> &block, MySqlDbConnection& conn) {
             cout << "BlockHeaderInsertStatement::execute " << sql << endl;
             stmt->setString(1, block->GetHash().GetHex());
@@ -404,7 +410,7 @@ protected:
     };
 };
 
-int main(int argc, char **argv) {
+int main1(int argc, char **argv) {
     fPrintToConsole = true;
     {
         signal(SIGINT, sigintHandler);
@@ -561,4 +567,55 @@ int main(int argc, char **argv) {
     threadGroup.join_all();
     cout << "Joined" << endl;
     return 0;
+}
+
+class BTC2BTG : public CBase58Data {
+
+static const uint8_t vBTC = 0;
+static const uint8_t vBTG = 38;
+static const uint8_t vBTC_S = 5;
+static const uint8_t vBTG_S = 23;
+
+public:
+    //BTC2BTG() : CBase58Data() {}
+
+    static std::string convAddr(const std::string &btc) {
+        std::vector<unsigned char> vchRet;
+        if (DecodeBase58Check(btc, vchRet)) {
+            switch (vchRet[0]) {
+                case vBTC:
+                    vchRet[0] = vBTG;
+                    break;
+                case vBTG:
+                    vchRet[0] = vBTC;
+                    break;
+                case vBTC_S:
+                    vchRet[0] = vBTG_S;
+                    break;
+                case vBTG_S:
+                    vchRet[0] = vBTC_S;
+                    break;
+                default:
+                    cerr << "Unknown address type " << vchRet[0] << endl;
+                    return "";
+            }
+            return EncodeBase58Check(vchRet);
+        } else {
+            cerr << "Failed DecodeBase58Check(" << btc << ")" << endl;
+            return "";
+        }
+    }
+};
+
+#include "pubkeys.hpp"
+
+int main2(int argc, char **argv) {
+    for (std::string &pubkey : pubkeys) {
+        cout << BTC2BTG::convAddr(pubkey) << endl;
+    }
+    return 0;
+}
+
+int main(int argc, char **argv) {
+    return main2(argc, argv);
 }

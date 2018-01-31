@@ -980,6 +980,7 @@
 		5F8306E7282247F4B43ED1AD /* uritests.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = uritests.cpp; path = src/qt/test/uritests.cpp; sourceTree = SOURCE_ROOT; };
 		5F8905BDD54E4A829AA6D91B /* db.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = db.h; path = src/wallet/db.h; sourceTree = SOURCE_ROOT; };
 		5FA4AFE9200051CE007A8482 /* mysql */ = {isa = PBXFileReference; lastKnownFileType = folder; name = mysql; path = src/mysql; sourceTree = "<group>"; };
+		5FD5083F20054B5A007A8482 /* pubkeys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = pubkeys.hpp; sourceTree = "<group>"; };
 		5FEA29AA1FF4A096007A8482 /* mysqlinterface.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mysqlinterface.cpp; sourceTree = "<group>"; };
 		5FEA29AB1FF4A096007A8482 /* mysqlinterface.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mysqlinterface.hpp; sourceTree = "<group>"; };
 		5FEB89261FEBAB20007A8482 /* bitcoin-tx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "bitcoin-tx"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1580,6 +1581,7 @@
 				3D88476DB93D4E6B8F72F6A4 /* zmqpublishnotifier.cpp */,
 				5F3FA41D1FEF6CD4007A8482 /* bitcoin-import.cpp */,
 				5F3FA41E1FEF6CD5007A8482 /* bitcoin-import.hpp */,
+				5FD5083F20054B5A007A8482 /* pubkeys.hpp */,
 				5FEA29AA1FF4A096007A8482 /* mysqlinterface.cpp */,
 				5FEA29AB1FF4A096007A8482 /* mysqlinterface.hpp */,
 			);

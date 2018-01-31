@@ -1,3 +1,5 @@
+pubkeys.hpp
+
 *.tar.gz
 
 *.exe
